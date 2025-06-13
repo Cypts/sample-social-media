@@ -1,0 +1,351 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+
+}
+
+html, body {
+   
+    background-color: #f8f8f8;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #c58f69;
+    color: gold;
+}
+ header{
+        height: 20vh;
+
+        width: 100vw;
+        
+        background-color: #914110;
+        color: rgb(248, 223, 83);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    header h1{
+        font-weight: 1000;
+        font-size: 48px;
+    }
+    .left{
+        
+       
+        height: 80vh;
+        align-items: center;
+        width: 10%;
+        left: 0;;
+        position: absolute;
+        top:50px;
+       
+    }
+    .left a{
+        
+        background-color: rgb(239, 207, 160);
+        text-align: center;;
+        text-decoration: none;
+        color: black;
+        height: 100%;
+        
+        height: 100%;
+        margin: 10px 10px;
+        font-weight: bolder;
+        border-bottom: solid;
+        border-right: solid ;
+        width: 100%;
+        border-radius: 10px;
+    }
+    .left a:hover{
+        transform: scale(1.2);
+        box-shadow: 0 0 30px rgba(239, 207, 160, 0.8);
+    }
+    .left:hover div{
+        display: block;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        height: 100%;
+    }
+    .left div{
+        display: none;
+     
+       
+    }
+    .left i{
+        display: block;
+    }
+
+.registration {
+    margin-top: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+    border-radius: 25px;
+    padding-bottom:  20px;
+    width: 500px;
+    background-color: white;
+    color:black ;
+}
+
+.nav-tabs {
+    display: flex;
+    width: 100%;
+    margin-top: 0;
+    margin-bottom: 20px;
+    border-radius: 25px 25px 0 0;
+    object-fit: contain;
+    overflow: hidden;
+}
+
+.nav-button {
+    height: 70px;
+    width: 50%;
+    font-size: larger;
+    border: none;
+    background-color: white;
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+    text-align: center;
+    line-height: 70px;
+    transition: background-color 0.3s;
+   
+
+}
+
+.nav-button:hover {
+    background-color: #eee;
+    cursor: pointer;
+}
+
+.nav-button.active {
+    background-color: brown;
+    color: white;
+}
+
+.registration form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.registration form h1 {
+    margin-bottom: 10px;
+}
+
+.registration form h3 {
+    align-self: flex-start;
+    margin-left: 50px;
+    margin-top: 20px;
+
+}
+
+.registration form input {
+    height: 30px;
+    width: 80%;
+    border: none;
+    border-radius: 17px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+    margin: 10px;
+    padding-left: 30px;
+}
+
+.registration form input:focus {
+    outline: none;
+    transform: scale(1.04);
+    box-shadow: 0 0 10px rgba(24, 44, 145, 0.8);
+}
+
+.registration form button {
+    height: 50px;
+    width: 100px;
+    margin-top: 20px;
+    background-color: rgb(17, 17, 120);
+    color: white;
+    font-size: larger;
+    border: none;
+    border-radius: 40px;
+}
+
+.registration form button:hover {
+    background-color: rgb(41, 41, 153);
+    cursor: pointer;
+}
+
+.registration form button:active {
+    background-color: rgb(55, 55, 153);
+}
+
+
+
+.searchBar{
+    height: 40px;
+    width: 400px;
+    margin:  20px;
+}
+.searchBar input{
+    height: 100%;
+    border: none;
+    padding: 0 10px;
+    width: 80px;
+}
+.searchBar input[type="text"]{
+    width: 300px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+    border-radius: 18px
+}
+.searchBar input[type="submit"]{
+    border-radius: 30px;
+    background-color: rgba(204, 137, 12, 0.615);
+    color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+    font-weight: bolder;
+    font-size: larger;
+}
+.friends-view-form{
+    width: 40%;
+    margin: 10px 0;
+    padding: 5px;
+    height: 120px;
+    border-radius: 8px;
+}
+.friends-view-form *{
+    border: none;
+}
+.friends-view-form button{
+    border-radius: 8px;
+}
+.friends-view {
+    border: none;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+    background-color: rgb(239, 207, 160);
+    color: rgba(60, 7, 4, 0.649);
+    border-radius: 8px;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+.friends-view:hover{
+    transform: scale(1.2);
+    cursor: pointer;
+}
+
+.friends-view h3 {
+    margin: 0 10px;
+    font-weight: 1300;
+}
+
+.friends-view img {
+    height: 70px;
+    width: 70px;
+    border-radius: 50%;
+}
+
+
+.post-view{
+    padding: 10px;
+    border: none;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+    background-color: white;
+    color: black;
+    border-radius: 8px;
+    width: 40%;
+    height: 70px;
+    margin: 20px;
+
+}
+.post-view div{
+    display: flex;
+    justify-content: space-between;
+}
+
+
+.notification-card{
+    height: 60px;
+    border: solid;
+}
+
+
+.elseProfile{
+        margin-top: 70px;
+        padding: 20px;
+        width: 70%;
+        background-color: #614e41;
+    
+    }
+    .image{
+        padding: 10px;
+        width: 100%;
+        height: 350px;
+        display: flex;
+        align-items: center;
+        
+    }
+    .image img{
+        height :300px;
+        width: 300px;
+        border-radius: 150px;
+        margin: 0 20px;
+    }
+    .image .info{
+        width: 50%;
+    }
+    .bio{
+        margin: 20px 0;
+        width: 100%;
+        height: auto;
+        padding: 10px;
+    }
+    .details{
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        width: 100%;
+        height: 40px;
+        
+    }
+    .details a{
+        text-decoration: none;
+        color: white;
+        font-size: larger;
+        font-family: bold;
+    }
+    .edit button{
+        background-color: rgb(4, 15, 98);
+        height: 80px;
+        width: 150px;
+        text-decoration: none;
+        color: white;
+        font-size: larger;
+        font-family: bold;
+    }
+    .edit{
+        height: 100%;
+        width: auto;
+    }
+    .user-friends{
+        border: none;
+        box-shadow: 0 0 10px rgba(0,0,0,0.8);
+        width: 70%;
+        margin: 10px 0;
+        padding: 5px;
+        height: 80px;
+        display: flex;
+        padding: 5px;
+        justify-content: space-around;
+    }
+    .user-friends h3{
+        border: none;
+
+    }
+    .user-friends img{
+        height: 70px;
+        width: 70px;
+        border-radius : 50%;
+    }
