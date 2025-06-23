@@ -37,23 +37,7 @@ if (mysqli_num_rows($rsFriend) > 0) {
     }
 }
 
-// Handle friend request actions
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['friendAction'])) {
-    if ($friendStatus === "Remove") {
-        mysqli_query($conn, "DELETE FROM friends WHERE user_id='$uid' AND friend_id='$Searchuid'");
-        mysqli_query($conn, "DELETE FROM friends WHERE user_id='$Searchuid' AND friend_id='$uid'");
-        echo '<script>alert("Friend Removed"); window.location.href="profile-view.php?viewProfile=' . $Searchuid . '";</script>';
-        exit;
-    } elseif ($friendStatus === "Request") {
-        mysqli_query($conn, "INSERT INTO friend_requests (from_user_id, to_user_id, status) VALUES ('$uid', '$Searchuid', 0)");
-        echo '<script>alert("Friend Request Sent!"); window.location.href="profile-view.php?viewProfile=' . $Searchuid . '";</script>';
-        exit;
-    } elseif ($friendStatus === "Pending") {
-        mysqli_query($conn, "DELETE FROM friend_requests WHERE from_user_id='$uid' AND to_user_id='$Searchuid'");
-        echo '<script>alert("Friend Request Canceled!"); window.location.href="profile-view.php?viewProfile=' . $Searchuid . '";</script>';
-        exit;
-    }
-}
+
 ?>
 
 <link href="css/style.css" rel="stylesheet">
@@ -180,11 +164,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['friendAction'])) {
                 <h2>Name: <?php echo htmlspecialchars($name1); ?></h2>
             </div>
             <div class="edit">
-                <form action="" method="POST">
-                    <input type="hidden" name="friendAction" value="1">
-                    <button type="submit"><?php echo $friendStatus; ?></button>
-                </form>
-            </div>
+                <button id="reqbutton" onclick ="sendreq(<?php echo $Searchuid ?>);" name="friendAction" type="submit"><?= $friendStatus ?></button>
+        </div>
         </div>
 
         <div class="bio">
@@ -226,3 +207,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['friendAction'])) {
         </div>
     </div>
 </body>
+<script>
+    function sendreq(id){
+        const xttp = new XMLHttpRequest();
+        xttp.onload=function (){
+           document.getElementById("reqbutton").innerHTML=this.responseText;
+        }
+        xttp.open("POST","sendRequest.php");
+        xttp.send(id);
+    }
+</script>

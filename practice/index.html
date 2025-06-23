@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <p id="aaa">saret::</p>
+    <input type="text" placeholder="enter text" onkeyup="fuct(this.value)">
+</body>
+<script>
+function fuct(str) {
+    const xttp = new XMLHttpRequest();
+    xttp.onload = function () {
+        document.getElementById("aaa").innerHTML = this.responseText;
+    };
+    // Fixed query string
+    xttp.open("GET", "sendMessage.php?HII=" + encodeURIComponent(str) + "&hadsfadf=ayush");
+    xttp.send();
+}
+</script>
+</html>

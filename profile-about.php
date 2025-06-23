@@ -1,94 +1,123 @@
-<link href="css/style.css" rel="stylesheet">
+<?php
+session_start();
+if (!isset($_SESSION['userid'])) {
+    header("Location: index.php");
+    exit;
+}
+?>
+
 <style>
-.elseProfile {
-    margin-top: 70px;
-    padding: 20px;
-    width: 70%;
-    background-color: #614e41;
-    margin-left: auto;
-    margin-right: auto;
-    border-radius: 10px;
-}
+    .elseProfile {
+        margin-top: 70px;
+        padding: 20px;
+        width: 70%;
+        background-color: #614e41;
+    }
 
-.image {
-    padding: 10px;
-    width: 100%;
-    height: 350px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
+    .image {
+        padding: 10px;
+        width: 100%;
+        height: 350px;
+        display: flex;
+        align-items: center;
+    }
 
-.image img {
-    height: 300px;
-    width: 300px;
-    border-radius: 150px;
-    margin-right: 20px;
-}
+    .image img {
+        height: 300px;
+        width: 300px;
+        border-radius: 150px;
+        margin: 0 20px;
+    }
 
-.image .info {
-    flex-grow: 1;
-    color: white;
-}
+    .image .info {
+        width: 50%;
+    }
 
-.bio {
-    margin: 20px 0;
-    width: 100%;
-    height: auto;
-    padding: 10px;
-    color: white;
-}
+    .bio {
+        margin: 20px 0;
+        width: 100%;
+        height: auto;
+        padding: 10px;
+        color: white;
+    }
 
-.details {
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    width: 100%;
-    height: 40px;
-    margin-top: 10px;
-}
+    .details {
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        width: 100%;
+        height: 40px;
+    }
 
-.details a {
-    text-decoration: none;
-    color: white;
-    font-size: larger;
-    font-weight: bold;
-}
+    .details a {
+        text-decoration: none;
+        color: white;
+        font-size: larger;
+        font-weight: bold;
+    }
 
-.edit button {
-    background-color: rgb(4, 15, 98);
-    height: 40px;
-    width: 120px;
-    color: white;
-    font-size: 16px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
+    .edit button {
+        background-color: rgb(4, 15, 98);
+        height: 80px;
+        width: 150px;
+        text-decoration: none;
+        color: white;
+        font-size: larger;
+        font-weight: bold;
+        cursor: pointer;
+    }
 
-.user-friends {
-    box-shadow: 0 0 10px rgba(0,0,0,0.8);
-    width: 70%;
-    margin: 10px auto;
-    padding: 10px;
-    display: flex;
-    justify-content: space-around;
-    background-color: white;
-    border-radius: 5px;
-}
+    .edit {
+        height: 100%;
+        width: auto;
+    }
 
-.user-friends img {
-    height: 70px;
-    width: 70px;
-    border-radius: 50%;
-}
-.details{
+    .user-friends {
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+        width: 70%;
+        margin: 10px 0;
+        padding: 5px;
+        height: 80px;
+        display: flex;
+        justify-content: space-around;
+        background-color: white;
+        border-radius: 10px;
+    }
+
+    .user-friends h3 {
+        margin: 0 10px;
+    }
+
+    .user-friends img {
+        height: 70px;
+        width: 70px;
+        border-radius: 50%;
+    }
+
+    .post-view {
+        width: 70%;
+        background-color: #fff;
+        margin: 10px 0;
+        padding: 10px;
+        border-radius: 8px;
+        box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+    }
+
+    .post-view h3 {
+        margin: 0;
+    }
+
+    .post-view p {
+        font-size: 0.9rem;
+        color: #555;
+    }
+    .details{
         width: 100%;
         margin-bottom : 20px ;
         border-bottom: solid;
         height: 50px
     }
-     .friends-button{
+    .friends-button{
         background-color: white;
         
         color: black !important;
@@ -102,18 +131,14 @@
     }
 </style>
 
-<?php
-session_start();
-if (!isset($_SESSION['userid'])) {
-    header("Location:index.php");
-    exit;
-}
+<link href="css/style.css" rel="stylesheet">
 
+<?php
 include "includes/header.html";
 include "includes/config.php";
 
-$Searchuid = $_GET['viewProfile'];
-$uid = $_SESSION['userid'];
+$Searchuid = (int) $_GET['viewProfile'];
+$uid = (int) $_SESSION['userid'];
 
 $sql3 = "SELECT * FROM users WHERE id = '$Searchuid'";
 $rs3 = mysqli_query($conn, $sql3);
@@ -121,6 +146,7 @@ $row3 = mysqli_fetch_array($rs3);
 
 $name1 = $row3['name'];
 $username1 = $row3['username'];
+$bio = "bio";
 
 $sqlFriend = "SELECT * FROM friends WHERE user_id='$uid' AND friend_id='$Searchuid'";
 $rsFriend = mysqli_query($conn, $sqlFriend);
@@ -130,50 +156,31 @@ if (mysqli_num_rows($rsFriend) > 0) {
 } else {
     $sqlRequest = "SELECT * FROM friend_requests WHERE from_user_id='$uid' AND to_user_id='$Searchuid' AND status=0";
     $rsRequest = mysqli_query($conn, $sqlRequest);
-    
-    if (mysqli_num_rows($rsRequest) > 0) {
-        $friendStatus = "Pending";
-    } else {
-        $friendStatus = "Request";
-    }
+
+    $friendStatus = (mysqli_num_rows($rsRequest) > 0) ? "Pending" : "Request";
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['friendAction'])) {
-    if ($friendStatus === "Remove") {
-        mysqli_query($conn, "DELETE FROM friends WHERE user_id='$uid' AND friend_id='$Searchuid'");
-        mysqli_query($conn, "DELETE FROM friends WHERE user_id='$Searchuid' AND friend_id='$uid'");
-        echo '<script>alert("Friend Removed"); window.location.href="profile-view.php?viewProfile='.$Searchuid.'";</script>';
-        exit;
-    } elseif ($friendStatus === "Request") {
-        mysqli_query($conn, "INSERT INTO friend_requests (from_user_id, to_user_id, status) VALUES ('$uid', '$Searchuid', 0)");
-        echo '<script>alert("Friend Request Sent!"); window.location.href="profile-view.php?viewProfile='.$Searchuid.'";</script>';
-        exit;
-    } elseif ($friendStatus === "Pending") {
-        mysqli_query($conn, "DELETE FROM friend_requests WHERE from_user_id='$uid' AND to_user_id='$Searchuid'");
-        echo '<script>alert("Friend Request Canceled!"); window.location.href="profile-view.php?viewProfile='.$Searchuid.'";</script>';
-        exit;
-    }
-}
+
 ?>
 
 <body>
-<div class="elseProfile">
-    <div class="image">
-        <img src="frappuccino.webp" alt="Profile Image">
-        <div class="info">
-            <h2>Username: <?= htmlspecialchars($username1) ?></h2>
-            <h2>Name: <?= htmlspecialchars($name1) ?></h2>
-        </div>
-        <div class="edit">
-            <form action="" method="POST">
-                <button name="friendAction" type="submit"><?= $friendStatus ?></button>
-            </form>
-        </div>
-    </div>
+    <div class="elseProfile">
+        <div class="image">
+            <img src="frappuccino.webp" alt="Profile Picture">
+            <div class="info">
+                <h2>Username: <?php echo htmlspecialchars($username1); ?></h2>
+                <h2>Name: <?php echo htmlspecialchars($name1); ?></h2>
+            </div>
+            <div class="edit">
 
-    <div class="bio">
-        <p>bio</p>
-    </div>
+                <button id="reqbutton" onclick ="sendreq(<?php echo $Searchuid ?>);" name="friendAction" type="submit"><?= $friendStatus ?></button>
+
+        </div>
+        </div>
+
+        <div class="bio">
+            <p><?php echo htmlspecialchars($bio); ?></p>
+        </div>
 
     <div class="details">
         <a href="profile-view.php?viewProfile=<?= urlencode($Searchuid) ?> " >Posts</a>
@@ -182,3 +189,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['friendAction'])) {
     </div>
 </div>
 </body>
+<script>
+    function sendreq(id){
+        const xttp = new XMLHttpRequest();
+        xttp.onload=function (){
+           document.getElementById("reqbutton").innerHTML=this.responseText;
+        }
+        xttp.open("POST","sendRequest.php");
+        xttp.send(id);
+    }
+</script>
+

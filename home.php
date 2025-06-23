@@ -8,28 +8,30 @@ if (!isset($_SESSION['userid'])) {
 include "includes/header.html";
 include "includes/config.php";
 echo '<h2 style="color: black">Home</h2>';
-function timeAgo($timestamp, $now) {
-    $time = new DateTime($timestamp);
+function timeAgo($times) {
+   
+  
+    $time = new DateTime($times);
+    $now = new DateTime();
     $diff = $now->diff($time);
 
-    if ($diff->i < 1) {
-        return "Just now";
-    } elseif ($diff->i < 60) {
-        return $diff->i . " minutes ago";
-    } elseif ($diff->h < 24) {
-        return $diff->h . " hours ago";
-    } elseif ($diff->d < 30) {
-        return $diff->d . " days ago";
-    } else {
-        return $time->format("d M Y");
+   
+    if ($diff->d > 0) {
+        if($diff->d > 7) return $times;
+
+        return $diff->d . ' day' . ($diff->d > 1 ? 's' : '') . ' ago';
     }
+    if ($diff->h > 0) return $diff->h . ' hour' . ($diff->h > 1 ? 's' : '') . ' ago';
+    if ($diff->i > 0) return $diff->i . ' minute' . ($diff->i > 1 ? 's' : '') . ' ago';
+    return 'just now';
 }
+
 
 $uid = $_SESSION['userid'];
 $now = new DateTime();
 
 
-$sql = "SELECT p.content, p.post_time, u.name, u.username
+$sql = "SELECT p.content, p.post_time, u.name, u.username,u.id
         FROM post p
         JOIN users u ON p.user_id = u.id
         LEFT JOIN friends f ON f.user_id = '$uid' AND f.friend_id = u.id
@@ -43,10 +45,11 @@ while ($row = mysqli_fetch_array($rs)) {
     $timee = $row['post_time'];
     $name = $row['name'];
     $username = $row['username'];
-
+    $id = $row['id'];
     echo '<div class="post-view">';
     echo '<div>';
-    echo '<p>Name: ' . $name . '</p>';
+    echo '<p><a href="profile-view.php?viewProfile=' . $id . '">Name: ' . $name . '</a></p>';
+
     echo '<p>Username: ' . $username . '</p>';
     echo '</div>';
     echo '<h3>' . $content . '</h3>';

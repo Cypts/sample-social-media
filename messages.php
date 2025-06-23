@@ -100,13 +100,7 @@ include "includes/config.php";
 
 $uid = $_SESSION['userid'];
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['sendMessage'])) {
-    $friendId = $_POST['id'];
-    $m = $_POST['message'];
-    mysqli_query($conn, "INSERT INTO messages(from_id,to_id,message) VALUE('$uid','$friendId','$m')");
-    header("Location: messages.php?ok=1&friend_id=" . $friendId);
-    exit();
-}
+
 
 echo '<h2 style="color: black">Messages</h2>';
 
@@ -144,39 +138,51 @@ if (isset($_GET['ok'])) {
     echo '</div>';
 
     echo '<div class="chat-messages" id="chat-messages">';
-    $getText = mysqli_query($conn, "SELECT * FROM messages 
-                                    WHERE (from_id = '$textUser' AND to_id = '$uid') 
-                                       OR (from_id = '$uid' AND to_id = '$textUser') 
-                                    ORDER BY m_time");
-
-    while ($messages = mysqli_fetch_array($getText)) {
-        $isSent = $uid == $messages['from_id'];
-        $msgClass = $isSent ? "sent" : "received";
-        echo '<div class="message ' . $msgClass . '">';
-        echo htmlspecialchars($messages['message']);
-        echo '<div class="timestamp">' . $messages['m_time'] . '</div>';
-        echo '</div>';
-    }
+    echo "<script>
+    setInterval(function() {
+        getMessage($textUser);
+    }, 500);
+</script>";
     echo '</div>';
 
-    echo '<form class="messageUser" action="" method="POST">';
-    echo '<input type="text" name="message" placeholder="Type a message" required>';
-    echo '<input type="hidden" name="id" value="' . $textUser . '">';
-    echo '<input type="submit" name="sendMessage" value="Send">';
-    echo '</form>';
+    echo '<div class="messageUser">';
+    echo '<input type="text" id="message" placeholder="Type a message" required>';
+    echo '<button onclick="sendMessage('.$textUser.');" >send</button>';
+    echo '</div>';
 
     echo '</div>';
 }
 ?>
 
 <script>
+
+window.onload = function () {
+    
+
+};
 function closeChatbox() {
     document.getElementById('chatbox').style.display = 'none';
 }
-window.onload = function () {
-    const chat = document.getElementById('chat-messages');
-    if (chat) {
+function sendMessage(id){
+    var messageToSend= document.getElementById("message").value;
+    const xttp = new XMLHttpRequest();
+    xttp.onload=function (){
+        document.getElementById("chat-messages").innerHTML=this.responseText;
+        const chat = document.getElementById('chat-messages');
+    chat.scrollTop = chat.scrollHeight;
+    }
+    xttp.open("GET","sendMessage.php?id=" + encodeURIComponent(id) + "&message=" + encodeURIComponent(messageToSend));
+    xttp.send();
+}
+function getMessage(id){
+   const xttp = new XMLHttpRequest();
+   xttp.onload=function (){
+        document.getElementById("chat-messages").innerHTML=this.responseText;
+        const chat = document.getElementById('chat-messages');
         chat.scrollTop = chat.scrollHeight;
     }
-};
+    xttp.open("GET","getMessage.php?id="+encodeURIComponent(id));
+    xttp.send();
+
+}
 </script>

@@ -12,68 +12,44 @@ $uid = $_SESSION['userid'];
 $searchHere = $_GET['search'] ?? '';
 $searchHere = mysqli_real_escape_string($conn, $searchHere);
 
-// Handle friend request form
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['requestSend'])) {
-    $friendId = intval($_POST['reqid']); // Sanitize input
-    if ($friendId !== $uid) {
-        $checkFriend = mysqli_query($conn, "SELECT * FROM friends WHERE user_id='$uid' AND friend_id='$friendId'");
-        if (mysqli_num_rows($checkFriend) > 0) {
-            // Remove friend
-            mysqli_query($conn, "DELETE FROM friends WHERE user_id='$uid' AND friend_id='$friendId'");
-            mysqli_query($conn, "DELETE FROM friends WHERE user_id='$friendId' AND friend_id='$uid'");
-            echo '<script>alert("Friend removed."); window.location.href="search.php";</script>';
-            exit;
-        } else {
-            // Check if request already sent
-            $checkReq = mysqli_query($conn, "SELECT * FROM friend_requests WHERE from_user_id='$uid' AND to_user_id='$friendId' AND status=0");
-            if (mysqli_num_rows($checkReq) === 0) {
-                // Send request
-                mysqli_query($conn, "INSERT INTO friend_requests (from_user_id, to_user_id, status) VALUES ('$uid', '$friendId', 0)");
-                echo '<script>alert("Friend request sent!"); window.location.href="search.php";</script>';
-                exit;
-            } else {
-                // Cancel request
-                mysqli_query($conn, "DELETE FROM friend_requests WHERE from_user_id='$uid' AND to_user_id='$friendId' AND status=0");
-                echo '<script>alert("Friend request canceled."); window.location.href="search.php";</script>';
-                exit;
-            }
-        }
-    }
-}
 
-// Search users excluding the current user
+
 $sql = "SELECT * FROM users WHERE (username LIKE '%$searchHere%' OR name LIKE '%$searchHere%') AND id != '$uid'";
 $rs = mysqli_query($conn, $sql);
 ?>
 
-<!-- Search Bar -->
+
 <form action="" method="GET" class="searchBar">
     <input type="text" name="search" placeholder="Search here" value="<?= htmlspecialchars($searchHere) ?>">
     <input type="submit" value="Search">
 </form>
 
-<!-- Search Results -->
 <?php
+function getStatus($id, $conn,$uid){
+    $status = "Request";
+    $isFriend = mysqli_query($conn, "SELECT * FROM friends WHERE user_id='$uid' AND friend_id='$id'");
+    if (mysqli_num_rows($isFriend) > 0) {
+        $status = "Remove";
+    } else {
+        $isPending = mysqli_query($conn, "SELECT * FROM friend_requests WHERE from_user_id='$uid' AND to_user_id='$id' AND status=0");
+        if (mysqli_num_rows($isPending) > 0) {
+            $status = "Pending";
+        }
+    }
+    return $status;
+
+}
 while ($row = mysqli_fetch_array($rs)) {
     $userId = $row['id'];
     $name = htmlspecialchars($row['name']);
     $username = htmlspecialchars($row['username']);
 
-    // Determine status: Remove / Pending / Request
-    $status = "Request";
-    $isFriend = mysqli_query($conn, "SELECT * FROM friends WHERE user_id='$uid' AND friend_id='$userId'");
-    if (mysqli_num_rows($isFriend) > 0) {
-        $status = "Remove";
-    } else {
-        $isPending = mysqli_query($conn, "SELECT * FROM friend_requests WHERE from_user_id='$uid' AND to_user_id='$userId' AND status=0");
-        if (mysqli_num_rows($isPending) > 0) {
-            $status = "Pending";
-        }
-    }
+
+    
 
     echo '<div style="display: flex; width: 70%; justify-content: center; align-items: center; margin: 10px auto;">';
 
-    // Profile View Button
+
     echo '<form action="profile-view.php" method="GET" style="flex-grow: 1;">';
     echo '<input type="hidden" name="viewProfile" value="' . $userId . '">';
     echo '<button type="submit" name="ok" value="1" style="width: 100%; height: 100%; border: none; background: none;">';
@@ -86,13 +62,23 @@ while ($row = mysqli_fetch_array($rs)) {
     echo '</div>';
     echo '</button>';
     echo '</form>';
-
-    // Friend Request / Remove Button
-    echo '<form action="" method="POST" style="margin-left: 15px;">';
-    echo '<input type="hidden" name="reqid" value="' . $userId . '">';
-    echo '<button name="requestSend" value="1" style="background-color: #39398b; height: 70px; color: white; width: 100px; border: none; border-radius: 7px; font-weight: bold;">' . $status . '</button>';
-    echo '</form>';
+    $status = getStatus($userId, $conn,$uid);
+    echo '<div style="margin-left: 15px;">';
+    echo '<button id="reqbutton'.$userId.'" onclick="sendreq('.$userId.');" value="1" style="background-color: #39398b; height: 70px; color: white; width: 100px; border: none; border-radius: 7px; font-weight: bold;">' .$status. '</button>';
+    echo '</div>';
 
     echo '</div>';
 }
 ?>
+
+<script>
+    function sendreq(id){
+        alert("sed");
+        const xttp = new XMLHttpRequest();
+        xttp.onload=function (){
+           document.getElementById("reqbutton"+id).innerHTML=this.responseText;
+        }
+        xttp.open("POST","sendRequest.php");
+        xttp.send(id);
+    }
+</script>
